@@ -3,54 +3,57 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Trilha da Saúde</title>
 <style>
 *{box-sizing:border-box}
 body{margin:0;background:#fff6fb;color:#49384f;font-family:Arial,sans-serif}
-header{text-align:center;padding:20px 10px 12px}
-header h1{color:#b34e91;margin:5px;font-size:30px}
-header p{font-size:14px;line-height:1.5;margin:8px auto;max-width:500px}
-main{width:min(100% - 16px,650px);margin:auto}
+header{text-align:center;padding:18px 10px}
+header h1{margin:5px;color:#b34e91;font-size:clamp(25px,5vw,36px)}
+header p{font-size:14px;line-height:1.5}
+main{max-width:760px;width:calc(100% - 16px);margin:auto}
 .painel{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
-.jogador{background:white;border:2px solid #ead7e9;border-radius:14px;padding:10px;display:flex;align-items:center;gap:7px;font-size:13px}
+.jogador{background:white;border:2px solid #ead7e9;border-radius:14px;padding:10px;display:flex;align-items:center;gap:7px;font-size:12px}
 .jogador.ativo{border-color:#e65ba4}
 .avatar{font-size:23px}
 .pontos{margin-left:auto;color:#ae4a8b;font-weight:bold}
-.status{text-align:center;background:white;border-radius:12px;padding:12px;margin-bottom:10px;font-weight:bold;font-size:13px}
-.tabuleiro-box{background:white;padding:8px;border-radius:20px;border:1px solid #ead8e8;box-shadow:0 5px 20px #75507712}
-.legenda{display:flex;justify-content:center;flex-wrap:wrap;gap:10px;font-size:11px;margin:5px 0 12px;color:#75637c}
-#tabuleiro{position:relative;width:100%;aspect-ratio:0.79;max-height:760px;overflow:hidden;border-radius:15px;background:#fffafd}
-#trilha{position:absolute;inset:0;width:100%;height:100%}
-.casa{position:absolute;width:8.4%;aspect-ratio:1;transform:translate(-50%,-50%);border:2px solid white;outline:1.5px solid #554258;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-direction:column;color:white;font-size:clamp(10px,2.5vw,15px);font-weight:bold;z-index:2;box-shadow:0 2px 3px #0001}
-.casa.especial{border-radius:50%;outline:2px solid #554258}
-.casa.inicio,.casa.chegada{width:13%;aspect-ratio:1;border-radius:50%;font-size:clamp(9px,2vw,12px);text-align:center;line-height:1.1;border:3px solid white;outline:2px solid #554258}
+.status{text-align:center;background:white;border-radius:12px;padding:12px;margin-bottom:10px;font-size:13px;font-weight:bold}
+.tabuleiro-box{background:white;padding:8px;border:1px solid #ead8e8;border-radius:20px;box-shadow:0 5px 20px #75507712}
+.legenda{display:flex;justify-content:center;flex-wrap:wrap;gap:9px;font-size:11px;margin:5px 0 10px;color:#75637c}
+#tabuleiro{position:relative;width:100%;aspect-ratio:0.82;max-height:800px;overflow:hidden;border-radius:15px;background:#fffbfd;touch-action:pan-y}
+#trilha{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.casa{position:absolute;width:9%;aspect-ratio:1;transform:translate(-50%,-50%);border:2px solid white;outline:1.5px solid #554258;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-direction:column;color:white;font-size:clamp(10px,2.5vw,16px);font-weight:bold;z-index:2;box-shadow:0 2px 3px #0001;user-select:none}
+.casa.especial{border-radius:50%}
+.casa.inicio,.casa.chegada{width:13%;border-radius:50%;font-size:clamp(9px,2vw,13px);text-align:center;line-height:1.1}
 .casa.inicio{background:#ffad64!important;color:#49384f}
 .casa.chegada{background:#39a875!important}
-.token{display:none;position:absolute;right:-6px;bottom:-6px;width:21px;height:21px;border:2px solid white;border-radius:50%;align-items:center;justify-content:center;font-size:12px;z-index:5}
+.casa.alvo{outline:4px solid #39b881;box-shadow:0 0 0 5px #39b88138;cursor:pointer;animation:pulso 1s infinite}
+@keyframes pulso{50%{filter:brightness(1.12)}}
+.token{position:absolute;right:-7px;bottom:-7px;width:27px;height:27px;border:2px solid white;border-radius:50%;display:none;align-items:center;justify-content:center;font-size:14px;z-index:6;box-shadow:0 2px 5px #0003;cursor:grab;touch-action:none;user-select:none}
 .token.visivel{display:flex}
 .token.voce{background:#e84c9a}
 .token.robo{background:#7561b2}
+.token.selecionado{outline:4px solid #ffd64f;transform:scale(1.18);cursor:grabbing}
 .casa.atual-voce{outline:3px solid #e84c9a}
 .casa.atual-robo{outline:3px solid #7561b2}
-.controles{display:grid;grid-template-columns:72px 1fr;gap:10px;margin-top:12px;align-items:center}
+.controles{display:grid;grid-template-columns:70px 1fr;gap:10px;margin-top:12px;align-items:center}
 .dado{height:65px;background:#fff0f8;border:1px solid #f0cde2;border-radius:13px;display:grid;place-items:center}
-#faceDado{font-size:33px}
+#faceDado{font-size:32px}
 .dado small{font-size:9px;color:#806c87}
 button{font-family:inherit;cursor:pointer;font-weight:bold}
-.principal{background:linear-gradient(110deg,#e967a8,#a889d6);color:white;border:0;border-radius:13px;padding:15px;width:100%;min-height:50px;font-size:15px}
-button:disabled{opacity:.5;cursor:not-allowed}
-#mensagem{text-align:center;font-size:12px;min-height:25px;padding:9px 0;color:#a34b89}
-.regras{font-size:12px;line-height:1.7;background:white;border:1px solid #ead8e8;border-radius:13px;padding:12px;margin:10px 0}
+.principal{background:linear-gradient(110deg,#e967a8,#a889d6);color:white;border:0;border-radius:13px;padding:14px;width:100%;min-height:48px;font-size:14px}
 .secundario{background:white;color:#a34b89;border:1px solid #e8cde0;padding:10px 15px;border-radius:11px}
+button:disabled{opacity:.5;cursor:not-allowed}
+#mensagem{text-align:center;font-size:12px;min-height:30px;padding:10px 2px;color:#a34b89;line-height:1.5}
+.regras{font-size:12px;line-height:1.7;background:white;border:1px solid #ead8e8;border-radius:13px;padding:12px;margin:10px 0}
 .centro{text-align:center;margin:12px}
-.modal{position:fixed;inset:0;background:#302039b8;display:none;align-items:center;justify-content:center;padding:14px;z-index:99}
+.modal{position:fixed;inset:0;background:#302039bd;display:none;align-items:center;justify-content:center;padding:14px;z-index:99}
 .modal.aberto{display:flex}
 .conteudo{background:white;width:min(100%,420px);max-height:90dvh;overflow:auto;padding:22px 17px;border-radius:22px;box-shadow:0 10px 40px #0003}
 .topo{text-align:center}
 .icone{font-size:34px}
 .etiqueta{display:inline-block;background:#fce5f3;color:#ae4a8b;padding:6px 10px;border-radius:20px;font-size:10px;font-weight:bold}
-h2{color:#ae4a8b;font-size:23px}
+h2{color:#ae4a8b;font-size:22px}
 #pergunta{font-size:15px;line-height:1.5;font-weight:bold;margin:15px 0}
 #respostas{display:grid;gap:8px}
 .resposta{padding:12px;border:2px solid #efdfed;border-radius:12px;background:#fff8fc;color:#49384f;text-align:left;font-size:13px;line-height:1.4}
@@ -62,9 +65,14 @@ h2{color:#ae4a8b;font-size:23px}
 .ruim{background:#fff0f0;color:#a23e4d}
 #continuar{display:none;margin-top:12px}
 #continuar.visivel{display:block}
-#fim h2{text-align:center}
-@media(min-width:500px){#tabuleiro{aspect-ratio:.82}.casa{width:8.5%}}
-@media(max-width:360px){.jogador{padding:8px 5px;font-size:11px}.casa{width:8.7%;border-radius:7px}.casa.inicio,.casa.chegada{width:13.5%}}
+@media(max-width:390px){
+ .jogador{padding:8px 5px;gap:5px}
+ .avatar{font-size:20px}
+ .pontos{font-size:10px}
+ .casa{width:9.5%;border-radius:7px}
+ .casa.inicio,.casa.chegada{width:14%}
+ .token{width:24px;height:24px;font-size:12px}
+}
 </style>
 </head>
 <body>
@@ -79,22 +87,35 @@ h2{color:#ae4a8b;font-size:23px}
  <div class="jogador ativo" id="painelVoce"><span class="avatar">🙋🏻‍♀️</span><div><b>Você</b><br><small id="posVoce">Início</small></div><span class="pontos" id="pontosVoce">0 pts</span></div>
  <div class="jogador" id="painelRobo"><span class="avatar">🤖</span><div><b>Robô</b><br><small id="posRobo">Início</small></div><span class="pontos" id="pontosRobo">0 pts</span></div>
 </div>
+
 <div class="status" id="status">🌸 Sua vez! Role o dado.</div>
 
 <div class="tabuleiro-box">
 <div class="legenda"><span>🩷 Você</span><span>💜 Robô</span><span>❓ Pergunta</span><span>⭐ Bônus</span><span>⚠️ Desafio</span></div>
+
 <div id="tabuleiro">
 <svg id="trilha" viewBox="0 0 600 760" preserveAspectRatio="none">
-<path id="borda" fill="none" stroke="#554258" stroke-width="48" stroke-linecap="round" stroke-linejoin="round"/>
-<path id="interior" fill="none" stroke="#f7d9e9" stroke-width="43" stroke-linecap="round" stroke-linejoin="round"/>
+<path id="borda" fill="none" stroke="#59445e" stroke-width="47" stroke-linecap="round" stroke-linejoin="round"/>
+<path id="interior" fill="none" stroke="#f7d9e9" stroke-width="42" stroke-linecap="round" stroke-linejoin="round"/>
 <path id="pontilhado" fill="none" stroke="#e5b9d5" stroke-width="2" stroke-dasharray="5 7"/>
 </svg>
 <div id="casas"></div>
 </div>
-<div class="controles"><div class="dado"><div style="text-align:center"><div id="faceDado">🎲</div><small>DADO</small></div></div><button class="principal" id="jogar">🎲 Jogar o dado</button></div>
-<div id="mensagem">Chegue à casa 30 para vencer!</div>
+
+<div class="controles">
+ <div class="dado"><div style="text-align:center"><div id="faceDado">🎲</div><small>DADO</small></div></div>
+ <button class="principal" id="jogar">🎲 Jogar o dado</button>
 </div>
-<div class="regras"><b>📋 Como jogar</b><br>Role o dado e avance. Responda às perguntas para ganhar pontos. As casas especiais podem ajudar ou atrapalhar. O robô joga automaticamente na vez dele!</div>
+<div id="mensagem">Depois de jogar, arraste sua peça até a casa destacada!</div>
+</div>
+
+<div class="regras">
+<b>📋 Como jogar</b><br>
+1. Role o dado para descobrir quantas casas avançar.<br>
+2. Arraste sua pecinha até a casa verde ou toque na peça e depois na casa verde.<br>
+3. Responda às perguntas e ganhe pontos.<br>
+4. O robô joga automaticamente. Chegue à casa 30 para vencer!
+</div>
 <div class="centro"><button class="secundario" id="reiniciar">↻ Reiniciar partida</button></div>
 </main>
 
@@ -106,33 +127,38 @@ h2{color:#ae4a8b;font-size:23px}
 </div>
 </div>
 
-<div class="modal" id="fim"><div class="conteudo">
-<div class="topo" style="font-size:45px">🏆</div><h2 id="fimTitulo">Fim de jogo!</h2><p id="fimTexto" style="line-height:1.6;text-align:center"></p>
+<div class="modal" id="fim">
+<div class="conteudo">
+<div class="topo" style="font-size:45px">🏆</div>
+<h2 id="fimTitulo" style="text-align:center">Fim de jogo!</h2>
+<p id="fimTexto" style="line-height:1.6;text-align:center"></p>
 <button class="principal" id="jogarNovamente">Jogar novamente 🎲</button>
-</div></div>
+</div>
+</div>
 
 <script>
 const perguntas=[
 ["🪪","Segurança do paciente","Antes de encaminhar alguém para uma consulta, o que fazer?",["Confirmar a identidade com os dados necessários","Confiar apenas no rosto","Chamar quem tiver nome parecido"],0,"Confirmar a identificação ajuda a evitar trocas de pacientes."],
 ["🧼","Biossegurança","Qual atitude ajuda a prevenir a transmissão de microrganismos?",["Usar materiais sem higienizar","Higienizar as mãos nos momentos indicados","Usar luvas no lugar da higiene das mãos"],1,"A higiene das mãos é essencial. Luvas não substituem essa prática."],
-["🔒","Sigilo e LGPD","Um conhecido pergunta sobre o tratamento de um paciente. O que fazer?",["Contar porque é conhecido","Mostrar o cadastro","Preservar o sigilo das informações"],2,"Informações de saúde devem ser protegidas e divulgadas apenas conforme as regras de acesso."],
-["💗","Atendimento humanizado","Uma pessoa está nervosa com a demora. Como agir?",["Ouvir, explicar e orientar com respeito","Mandar parar de reclamar","Ignorar a pessoa"],0,"Escuta e informação clara ajudam a tornar o atendimento mais humano."],
+["🔒","Sigilo e LGPD","Um conhecido pergunta sobre o tratamento de um paciente. O que fazer?",["Contar porque é conhecido","Mostrar o cadastro","Preservar o sigilo das informações"],2,"Informações de saúde devem ser protegidas."],
+["💗","Atendimento humanizado","Uma pessoa está nervosa com a demora. Como agir?",["Ouvir, explicar e orientar com respeito","Mandar parar de reclamar","Ignorar a pessoa"],0,"Escuta e informação clara tornam o atendimento mais humano."],
 ["📈","Melhoria contínua","Para que serve a melhoria contínua?",["Manter todas as falhas","Identificar problemas e melhorar processos","Evitar sugestões"],1,"A melhoria contínua identifica falhas e ajuda a testar soluções."],
 ["🗣️","Comunicação","Você não entendeu uma orientação. O que fazer?",["Inventar uma resposta","Passar qualquer informação","Confirmar com o profissional responsável"],2,"Informações devem ser corretas. Em caso de dúvida, confirme."],
 ["⭐","Qualidade","Qual é um exemplo de atendimento com qualidade?",["Orientar com clareza e respeito","Atender sem ouvir","Deixar as pessoas sem informação"],0,"Qualidade envolve segurança, organização e respeito."],
-["🚨","Segurança","Uma pessoa relata sintomas que parecem urgentes. O que fazer?",["Mandar esperar sem avisar","Acionar a equipe responsável pelo protocolo de urgência","Tentar diagnosticar"],1,"Comunique a equipe responsável imediatamente e siga o protocolo do serviço."],
+["🚨","Segurança","Uma pessoa relata sintomas que parecem urgentes. O que fazer?",["Mandar esperar sem avisar","Acionar a equipe responsável pelo protocolo de urgência","Tentar diagnosticar"],1,"Avise imediatamente a equipe responsável e siga o protocolo do serviço."],
 ["🗂️","Organização","Por que conferir os dados do cadastro?",["Para deixar bonito","Para eliminar o sigilo","Para evitar erros de identificação"],2,"Dados corretos ajudam a garantir um atendimento mais seguro."],
-["🤝","Trabalho em equipe","Você percebe uma falha no atendimento. O que fazer?",["Comunicar e ajudar a buscar uma solução","Esconder o ocorrido","Culpar alguém sem verificar"],0,"Comunicar falhas permite corrigir problemas e prevenir repetições."],
-["📊","Indicadores","Para que servem os indicadores de qualidade?",["Para substituir todo diálogo","Para acompanhar resultados e encontrar melhorias","Para criar formulários sem objetivo"],1,"Indicadores ajudam a acompanhar o tempo de espera, reclamações e outros resultados."],
+["🤝","Trabalho em equipe","Você percebe uma falha no atendimento. O que fazer?",["Comunicar e ajudar a buscar uma solução","Esconder o ocorrido","Culpar alguém sem verificar"],0,"Comunicar falhas ajuda a corrigir problemas e prevenir repetições."],
+["📊","Indicadores","Para que servem os indicadores de qualidade?",["Para substituir todo diálogo","Para acompanhar resultados e encontrar melhorias","Para criar formulários sem objetivo"],1,"Indicadores ajudam a acompanhar resultados e identificar melhorias."],
 ["⚖️","Ética profissional","Pedem uma informação que você não pode fornecer. O que fazer?",["Inventar uma resposta","Contar dados de outra pessoa","Explicar e encaminhar ao responsável"],2,"Respeite os limites da função e encaminhe a dúvida a alguém autorizado."],
 ["✅","Prevenção de erros","Qual atitude ajuda a evitar erros?",["Seguir os procedimentos e conferir dados","Pular etapas com fila","Deixar tudo para depois"],0,"Seguir os procedimentos reduz o risco de falhas."],
-["🌷","Experiência do paciente","Como melhorar a experiência do paciente?",["Usar palavras difíceis","Dar orientações claras e tratar com respeito","Evitar perguntas"],1,"Orientações compreensíveis e respeito tornam o atendimento mais acolhedor."],
+["🌷","Experiência do paciente","Como melhorar a experiência do paciente?",["Usar palavras difíceis","Dar orientações claras e tratar com respeito","Evitar perguntas"],1,"Orientações claras e respeito tornam o atendimento mais acolhedor."],
 ["🔄","PDCA","O que significa o ciclo PDCA?",["Organizar só os horários","Substituir a segurança","Planejar, fazer, verificar e agir para melhorar"],2,"PDCA é um ciclo usado para planejar, executar, verificar e melhorar processos."]
 ];
 
 const especiais={5:"pergunta",9:"bonus",13:"pergunta",17:"desafio",21:"pergunta",25:"bonus",28:"pergunta"};
 const cores=["#7561b3","#50b9df","#4caf83","#ffd44e","#ef6878","#e84b9b","#a65391","#ff9e55","#f1a2b4","#45489d"];
-// Coordenadas espaçadas ao longo de uma trilha sinuosa, sem casas amontoadas.
+
+// Trilha com casas espaçadas e posições fixas.
 const pontos=[
 [500,700],[445,710],[390,705],[335,690],[280,670],[225,650],
 [170,625],[130,585],[105,535],[105,485],[125,435],[165,400],
@@ -140,38 +166,58 @@ const pontos=[
 [485,330],[475,285],[445,250],[400,230],[350,220],[300,215],
 [250,205],[205,185],[180,150],[200,115],[250,85],[320,65]
 ];
-const N=30;
-let pos={voce:0,robo:0},pts={voce:0,robo:0},vez="voce",busy=false,fimJogo=false,respondida=false,perguntaAtual=null,usadas=[];
-const $=id=>document.getElementById(id);
-const casas=$("casas"),modal=$("modal");
 
-function criar(){
+const $=id=>document.getElementById(id);
+const casas=$("casas");
+let pos={voce:0,robo:0},pts={voce:0,robo:0},vez="voce";
+let estado="aguardando",fimJogo=false,respondida=false,perguntaAtual=null,usadas=[];
+let destino=null,drag=null,pecaSelecionada=false;
+
+function criarTabuleiro(){
  const d=pontos.map((p,i)=>(i?"L":"M")+p[0]+" "+p[1]).join(" ");
  ["borda","interior","pontilhado"].forEach(id=>$(id).setAttribute("d",d));
+
  pontos.forEach((p,i)=>{
-  let n=i+1,e=especiais[n],el=document.createElement("div");
+  const n=i+1,e=especiais[n],el=document.createElement("div");
   el.id="casa"+n;el.className="casa";
-  el.style.left=(p[0]/600*100)+"%";el.style.top=(p[1]/760*100)+"%";
+  el.style.left=(p[0]/600*100)+"%";
+  el.style.top=(p[1]/760*100)+"%";
   el.style.background=e==="pergunta"?"#ff9d55":e==="bonus"?"#ffd943":e==="desafio"?"#ed6978":cores[i%cores.length];
   if(e)el.classList.add("especial");
-  if(n===1){el.classList.add("inicio");el.innerHTML="INÍCIO"}
-  else if(n===N){el.classList.add("chegada");el.innerHTML="🏁<br>CHEGADA"}
-  else el.innerHTML=`<span>${n}</span>${e?`<small style="font-size:9px">${e==="pergunta"?"❓":e==="bonus"?"⭐":"⚠️"}</small>`:""}`;
-  el.innerHTML+=`<span class="token voce" id="tv${n}">🙋</span><span class="token robo" id="tr${n}">🤖</span>`;
-  casas.appendChild(el);
+  if(n===1){el.classList.add("inicio");el.textContent="INÍCIO"}
+  else if(n===30){el.classList.add("chegada");el.innerHTML="🏁<br>CHEGADA"}
+  else el.innerHTML=`<span>${n}</span>${e?`<small>${e==="pergunta"?"❓":e==="bonus"?"⭐":"⚠️"}</small>`:""}`;
+
+  const tv=document.createElement("span");
+  tv.className="token voce";tv.id="tv"+n;tv.textContent="🙋🏻‍♀️";
+  const tr=document.createElement("span");
+  tr.className="token robo";tr.id="tr"+n;tr.textContent="🤖";
+  el.append(tv,tr);casas.appendChild(el);
+ });
+
+ // Pointer events funcionam com mouse, dedo e caneta digital.
+ document.querySelectorAll(".token.voce").forEach(token=>{
+  token.addEventListener("pointerdown",iniciarArrasto);
+  token.addEventListener("click",()=>selecionarPeca());
  });
  atualizar();
 }
+
 function atualizar(){
- for(let n=1;n<=N;n++){
-  $("casa"+n).classList.remove("atual-voce","atual-robo");
-  $("tv"+n).classList.remove("visivel");$("tr"+n).classList.remove("visivel");
+ for(let n=1;n<=30;n++){
+  $("casa"+n).classList.remove("atual-voce","atual-robo","alvo");
+  $("tv"+n).classList.remove("visivel","selecionado");
+  $("tr"+n).classList.remove("visivel");
  }
  ["voce","robo"].forEach(j=>{
-  let n=pos[j]+1;
+  const n=pos[j]+1;
   $("casa"+n).classList.add(j==="voce"?"atual-voce":"atual-robo");
   $((j==="voce"?"tv":"tr")+n).classList.add("visivel");
  });
+ if(estado==="movendo"&&destino!==null){
+  $("casa"+(destino+1)).classList.add("alvo");
+  $("tv"+(pos.voce+1)).classList.add("selecionado");
+ }
  $("posVoce").textContent="Casa "+(pos.voce+1);
  $("posRobo").textContent="Casa "+(pos.robo+1);
  $("pontosVoce").textContent=pts.voce+" pts";
@@ -179,76 +225,208 @@ function atualizar(){
  $("painelVoce").classList.toggle("ativo",vez==="voce");
  $("painelRobo").classList.toggle("ativo",vez==="robo");
 }
-function dado(){let n=1+Math.floor(Math.random()*6);$("faceDado").textContent=["⚀","⚁","⚂","⚃","⚄","⚅"][n-1];return n}
-function turno(){
- if(fimJogo)return;
- vez=vez==="voce"?"robo":"voce";busy=false;atualizar();
- if(vez==="voce"){$("status").textContent="🌸 Sua vez! Role o dado.";$("jogar").disabled=false;$("jogar").textContent="🎲 Jogar o dado"}
- else{$("status").textContent="🤖 Vez do robô...";$("jogar").disabled=true;$("jogar").textContent="🤖 Vez do robô";setTimeout(jogadaRobo,900)}
+
+function dado(){
+ const n=Math.floor(Math.random()*6)+1;
+ $("faceDado").textContent=["⚀","⚁","⚂","⚃","⚄","⚅"][n-1];
+ return n;
 }
-function mover(j,n){
- pos[j]=Math.min(N-1,pos[j]+n);atualizar();
- if(pos[j]===N-1){encerrar(j);return}
- const casa=pos[j]+1,e=especiais[casa];
- if(e==="pergunta"){ $("status").textContent="❓ Hora de responder!";setTimeout(()=>abrir(j),350);return}
- if(e==="bonus"){pos[j]=Math.min(N-1,pos[j]+2);pts[j]+=5;$("mensagem").textContent="⭐ Bônus! Avançou 2 casas e ganhou 5 pontos.";atualizar()}
- else if(e==="desafio"){pos[j]=Math.max(0,pos[j]-1);$("mensagem").textContent="⚠️ Desafio! Volte uma casa.";atualizar()}
- else $("mensagem").textContent=`${j==="voce"?"Você":"O robô"} avançou para a casa ${pos[j]+1}.`;
- if(pos[j]===N-1){encerrar(j);return}
- setTimeout(turno,j==="robo"?800:500);
+
+function jogarDado(){
+ if(estado!=="aguardando"||vez!=="voce"||fimJogo)return;
+ const n=dado();
+ destino=Math.min(29,pos.voce+n);
+ estado="movendo";
+ $("jogar").disabled=true;
+ $("status").textContent=`🎲 Você tirou ${n}! Mova sua peça até a casa ${destino+1}.`;
+ $("mensagem").textContent="Arraste sua peça até a casa verde ou toque na peça e depois no destino.";
+ atualizar();
 }
-function jogada(j){
- if(busy||fimJogo)return;busy=true;$("jogar").disabled=true;
- const n=dado();$("status").textContent=`${j==="voce"?"Você":"O robô"} tirou ${n}!`;
- setTimeout(()=>mover(j,n),500);
+
+function selecionarPeca(){
+ if(estado!=="movendo"||vez!=="voce")return;
+ pecaSelecionada=true;
+ $("mensagem").textContent="Agora toque na casa destacada em verde.";
 }
-function jogadaRobo(){if(!fimJogo&&vez==="robo")jogada("robo")}
-function abrir(j){
- if(!usadas.length)usadas=perguntas.map((_,i)=>i);
- const k=Math.floor(Math.random()*usadas.length);
- perguntaAtual=perguntas[usadas.splice(k,1)[0]];respondida=false;
- $("icone").textContent=perguntaAtual[0];$("tema").textContent=perguntaAtual[1].toUpperCase();
- $("titulo").textContent=j==="voce"?"Sua pergunta!":"Desafio do robô";
- $("pergunta").textContent=perguntaAtual[2];$("respostas").innerHTML="";
- $("resultado").className="";$("resultado").textContent="";$("continuar").classList.remove("visivel");
- perguntaAtual[3].forEach((texto,i)=>{
-  let b=document.createElement("button");b.className="resposta";b.textContent=String.fromCharCode(65+i)+". "+texto;
-  b.onclick=()=>responder(i,j);$("respostas").appendChild(b);
- });
- modal.classList.add("aberto");
- if(j==="robo"){
-  document.querySelectorAll(".resposta").forEach(b=>b.disabled=true);
-  setTimeout(()=>{if(!respondida){let a=Math.random()<.78?perguntaAtual[4]:[0,1,2].filter(i=>i!==perguntaAtual[4])[Math.floor(Math.random()*2)];responder(a,"robo")}},1000);
+
+function iniciarArrasto(ev){
+ if(estado!=="movendo"||vez!=="voce")return;
+ ev.preventDefault();
+ drag=ev.currentTarget;
+ pecaSelecionada=true;
+ drag.setPointerCapture(ev.pointerId);
+ drag.addEventListener("pointermove",moverVisual);
+ drag.addEventListener("pointerup",soltarPeca,{once:true});
+ drag.addEventListener("pointercancel",soltarPeca,{once:true});
+}
+function moverVisual(ev){
+ if(!drag)return;
+ // A peça acompanha o dedo ou o cursor sem deslocar a casa.
+ const rect=$("tabuleiro").getBoundingClientRect();
+ drag.style.position="fixed";
+ drag.style.left=ev.clientX+"px";
+ drag.style.top=ev.clientY+"px";
+ drag.style.right="auto";drag.style.bottom="auto";
+ drag.style.transform="translate(-50%,-50%) scale(1.2)";
+ drag.style.zIndex="200";
+}
+function soltarPeca(ev){
+ if(!drag)return;
+ drag.removeEventListener("pointermove",moverVisual);
+ const rect=$("tabuleiro").getBoundingClientRect();
+ const x=ev.clientX,y=ev.clientY;
+ drag.style.position="";drag.style.left="";drag.style.top="";
+ drag.style.right="";drag.style.bottom="";drag.style.transform="";drag.style.zIndex="";
+ const alvo=document.elementFromPoint(x,y)?.closest(".casa");
+ drag=null;
+ if(alvo&&alvo.id==="casa"+(destino+1)){
+  confirmarMovimento();
+ }else{
+  $("mensagem").textContent="Quase! Solte a peça na casa destacada em verde ou toque nela.";
  }
 }
+
+$("casas").addEventListener("click",ev=>{
+ if(estado!=="movendo"||vez!=="voce")return;
+ const casa=ev.target.closest(".casa");
+ if(casa&&casa.id==="casa"+(destino+1)&&pecaSelecionada)confirmarMovimento();
+});
+
+function confirmarMovimento(){
+ if(estado!=="movendo")return;
+ pos.voce=destino;destino=null;pecaSelecionada=false;
+ estado="processando";atualizar();
+ processarCasa("voce");
+}
+
+function processarCasa(j){
+ if(pos[j]>=29){encerrar(j);return}
+ const casa=pos[j]+1,e=especiais[casa];
+ if(e==="pergunta"){
+  $("status").textContent=j==="voce"?"❓ Responda à pergunta!":"🤖 O robô caiu numa pergunta!";
+  setTimeout(()=>abrirPergunta(j),350);return;
+ }
+ if(e==="bonus"){
+  pos[j]=Math.min(29,pos[j]+2);pts[j]+=5;
+  $("mensagem").textContent="⭐ Bônus! Avançou 2 casas e ganhou 5 pontos.";
+ }else if(e==="desafio"){
+  pos[j]=Math.max(0,pos[j]-1);
+  $("mensagem").textContent="⚠️ Desafio! Volte uma casa.";
+ }else{
+  $("mensagem").textContent=`${j==="voce"?"Você":"O robô"} chegou à casa ${pos[j]+1}.`;
+ }
+ atualizar();
+ if(pos[j]>=29){encerrar(j);return}
+ setTimeout(trocarVez,650);
+}
+
+function jogadaRobo(){
+ if(fimJogo||vez!=="robo")return;
+ estado="robo";
+ const n=dado();
+ $("status").textContent=`🤖 O robô tirou ${n} e está avançando...`;
+ setTimeout(()=>{
+  pos.robo=Math.min(29,pos.robo+n);
+  atualizar();processarCasa("robo");
+ },850);
+}
+
+function trocarVez(){
+ if(fimJogo)return;
+ vez=vez==="voce"?"robo":"voce";
+ estado="aguardando";destino=null;pecaSelecionada=false;atualizar();
+ if(vez==="voce"){
+  $("status").textContent="🌸 Sua vez! Role o dado.";
+  $("jogar").disabled=false;
+  $("jogar").textContent="🎲 Jogar o dado";
+ }else{
+  $("status").textContent="🤖 Vez do robô...";
+  $("jogar").disabled=true;
+  $("jogar").textContent="🤖 Vez do robô";
+  setTimeout(jogadaRobo,900);
+ }
+}
+
+function abrirPergunta(j){
+ if(!usadas.length)usadas=perguntas.map((_,i)=>i);
+ const k=Math.floor(Math.random()*usadas.length);
+ perguntaAtual=perguntas[usadas.splice(k,1)[0]];
+ respondida=false;
+ $("icone").textContent=perguntaAtual[0];
+ $("tema").textContent=perguntaAtual[1].toUpperCase();
+ $("titulo").textContent=j==="voce"?"Sua pergunta!":"Desafio do robô";
+ $("pergunta").textContent=perguntaAtual[2];
+ $("respostas").innerHTML="";
+ $("resultado").className="";
+ $("resultado").textContent="";
+ $("continuar").classList.remove("visivel");
+
+ perguntaAtual[3].forEach((texto,i)=>{
+  const b=document.createElement("button");
+  b.className="resposta";
+  b.textContent=String.fromCharCode(65+i)+". "+texto;
+  b.onclick=()=>responder(i,j);
+  $("respostas").appendChild(b);
+ });
+ $("modal").classList.add("aberto");
+
+ if(j==="robo"){
+  document.querySelectorAll(".resposta").forEach(b=>b.disabled=true);
+  setTimeout(()=>{
+   if(respondida)return;
+   const certa=perguntaAtual[4];
+   const escolha=Math.random()<.78?certa:[0,1,2].filter(i=>i!==certa)[Math.floor(Math.random()*2)];
+   responder(escolha,"robo");
+  },1000);
+ }
+}
+
 function responder(i,j){
- if(respondida)return;respondida=true;
- const certo=i===perguntaAtual[4];
- document.querySelectorAll(".resposta").forEach((b,k)=>{b.disabled=true;if(k===perguntaAtual[4])b.classList.add("correta");if(k===i&&!certo)b.classList.add("errada")});
- $("resultado").className="visivel "+(certo?"bom":"ruim");
- $("resultado").innerHTML=(certo?"✅ Resposta correta! +10 pontos.<br>":"💡 Não foi dessa vez.<br>")+perguntaAtual[5];
- if(certo)pts[j]+=10;atualizar();
- if(j==="voce"){$("continuar").classList.add("visivel")}
+ if(respondida)return;
+ respondida=true;
+ const certa=i===perguntaAtual[4];
+ document.querySelectorAll(".resposta").forEach((b,k)=>{
+  b.disabled=true;
+  if(k===perguntaAtual[4])b.classList.add("correta");
+  if(k===i&&!certa)b.classList.add("errada");
+ });
+ $("resultado").className="visivel "+(certa?"bom":"ruim");
+ $("resultado").innerHTML=(certa?"✅ Resposta correta! +10 pontos.<br>":"💡 Não foi dessa vez.<br>")+perguntaAtual[5];
+ if(certa)pts[j]+=10;
+ atualizar();
+
+ if(j==="voce")$("continuar").classList.add("visivel");
  else setTimeout(fecharPergunta,1800);
 }
-function fecharPergunta(){modal.classList.remove("aberto");if(pos[vez]>=N-1)encerrar(vez);else turno()}
+function fecharPergunta(){
+ $("modal").classList.remove("aberto");
+ if(pos[vez]>=29)encerrar(vez);
+ else trocarVez();
+}
 $("continuar").onclick=()=>{if(respondida)fecharPergunta()};
+
 function encerrar(j){
- fimJogo=true;busy=true;$("jogar").disabled=true;modal.classList.remove("aberto");
+ fimJogo=true;estado="fim";$("modal").classList.remove("aberto");
+ $("jogar").disabled=true;
  $("fimTitulo").textContent=j==="voce"?"Você venceu! 🎉":"O robô venceu! 🤖";
- $("fimTexto").textContent=`Pontuação final: você ${pts.voce} pontos e robô ${pts.robo} pontos. Continue praticando a qualidade e a segurança no atendimento!`;
+ $("fimTexto").textContent=`Pontuação final: você ${pts.voce} pontos e robô ${pts.robo} pontos. Parabéns por praticar a qualidade e a segurança no atendimento!`;
  $("fim").classList.add("aberto");$("status").textContent="🏁 Fim de jogo!";
 }
 function reiniciar(){
- pos={voce:0,robo:0};pts={voce:0,robo:0};vez="voce";busy=false;fimJogo=false;respondida=false;usadas=[];
- modal.classList.remove("aberto");$("fim").classList.remove("aberto");$("faceDado").textContent="🎲";
- $("jogar").disabled=false;$("jogar").textContent="🎲 Jogar o dado";
- $("status").textContent="🌸 Sua vez! Role o dado.";$("mensagem").textContent="Chegue à casa 30 para vencer!";
+ pos={voce:0,robo:0};pts={voce:0,robo:0};vez="voce";
+ estado="aguardando";fimJogo=false;respondida=false;usadas=[];
+ destino=null;drag=null;pecaSelecionada=false;
+ $("modal").classList.remove("aberto");$("fim").classList.remove("aberto");
+ $("faceDado").textContent="🎲";$("jogar").disabled=false;
+ $("jogar").textContent="🎲 Jogar o dado";
+ $("status").textContent="🌸 Sua vez! Role o dado.";
+ $("mensagem").textContent="Depois de jogar, arraste sua peça até a casa destacada!";
  atualizar();
 }
-$("jogar").onclick=()=>{if(vez==="voce")jogada("voce")};
-$("reiniciar").onclick=reiniciar;$("jogarNovamente").onclick=reiniciar;
-criar();
+$("jogar").onclick=jogarDado;
+$("reiniciar").onclick=reiniciar;
+$("jogarNovamente").onclick=reiniciar;
+criarTabuleiro();
 </script>
 </body>
 </html>
