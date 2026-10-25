@@ -2,1358 +2,253 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#f8e9f1">
-  <title>CLINICARE 360° | Jogo da Qualidade</title>
-
-  <style>
-    :root {
-      --rosa: #f5c9dc;
-      --rosa-escuro: #d96d9e;
-      --rosa-claro: #fff5fa;
-      --lilas: #e7ddff;
-      --verde: #d8f3e4;
-      --amarelo: #fff0bd;
-      --azul: #dceeff;
-      --roxo: #7761a8;
-      --texto: #443849;
-      --branco: #ffffff;
-      --sombra: 0 8px 25px #6c496018;
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      margin: 0;
-      font-family: "Trebuchet MS", Arial, sans-serif;
-      background:
-        radial-gradient(circle at top left, #ffe2ef 0, transparent 32%),
-        linear-gradient(135deg, #fff9fc, #f2efff);
-      color: var(--texto);
-      min-height: 100vh;
-    }
-
-    button, select {
-      font: inherit;
-    }
-
-    button {
-      cursor: pointer;
-      border: none;
-      transition: transform .18s, filter .18s;
-    }
-
-    button:hover:not(:disabled) {
-      transform: translateY(-2px);
-      filter: brightness(1.03);
-    }
-
-    button:disabled {
-      cursor: not-allowed;
-      opacity: .5;
-    }
-
-    .hero {
-      position: relative;
-      overflow: hidden;
-      padding: 30px 16px 25px;
-      text-align: center;
-      background: linear-gradient(135deg, #f7d6e6, #e9e0ff, #dff4eb);
-      border-bottom: 4px solid #ffffff;
-    }
-
-    .hero::before, .hero::after {
-      content: "✦";
-      position: absolute;
-      font-size: 55px;
-      color: #ffffff99;
-    }
-
-    .hero::before {
-      left: 8%;
-      top: 15px;
-    }
-
-    .hero::after {
-      right: 8%;
-      bottom: 10px;
-    }
-
-    .logo {
-      display: inline-block;
-      padding: 7px 15px;
-      border: 1px solid #ffffffb5;
-      border-radius: 30px;
-      background: #ffffffa8;
-      color: #79547d;
-      font-size: 12px;
-      font-weight: 900;
-      letter-spacing: 2px;
-    }
-
-    h1 {
-      margin: 13px 0 6px;
-      color: #66496f;
-      font-size: clamp(27px, 5vw, 46px);
-      letter-spacing: 1px;
-    }
-
-    .hero p {
-      max-width: 650px;
-      margin: 0 auto;
-      line-height: 1.6;
-      font-size: 15px;
-    }
-
-    main {
-      width: min(1150px, 100%);
-      margin: auto;
-      padding: 20px 14px 35px;
-    }
-
-    .panel {
-      background: #ffffffd9;
-      border: 1px solid #ffffff;
-      border-radius: 22px;
-      box-shadow: var(--sombra);
-      padding: 18px;
-      margin-bottom: 18px;
-    }
-
-    .section-title {
-      margin: 0 0 12px;
-      font-size: 19px;
-      color: #75567d;
-    }
-
-    .setup {
-      display: flex;
-      gap: 12px;
-      align-items: center;
-      flex-wrap: wrap;
-    }
-
-    .setup label {
-      font-weight: bold;
-      font-size: 14px;
-    }
-
-    select {
-      padding: 11px 13px;
-      border-radius: 12px;
-      border: 1px solid #e5cce0;
-      background: #fff9fc;
-      color: var(--texto);
-    }
-
-    .primary-btn {
-      background: linear-gradient(135deg, #d979a7, #a18bd7);
-      color: white;
-      padding: 12px 20px;
-      border-radius: 14px;
-      font-weight: bold;
-      box-shadow: 0 5px 12px #b875a52b;
-    }
-
-    .secondary-btn {
-      background: #f0e9fa;
-      color: #6c5687;
-      padding: 11px 16px;
-      border-radius: 12px;
-      font-weight: bold;
-    }
-
-    .game-layout {
-      display: grid;
-      grid-template-columns: minmax(0, 1.65fr) minmax(260px, .9fr);
-      gap: 18px;
-      align-items: start;
-    }
-
-    .board-panel {
-      padding: 14px;
-    }
-
-    .board-heading {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      flex-wrap: wrap;
-      padding: 4px 4px 14px;
-    }
-
-    .board-heading h2 {
-      font-size: 20px;
-      color: #75567d;
-      margin: 0;
-    }
-
-    .board-heading span {
-      font-size: 12px;
-      color: #8d7790;
-    }
-
-    .board {
-      display: grid;
-      grid-template-columns: repeat(5, minmax(0, 1fr));
-      gap: 6px;
-    }
-
-    .cell {
-      min-width: 0;
-      aspect-ratio: 1 / 1;
-      position: relative;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 4px;
-      border: 2px solid #ffffff;
-      border-radius: 13px;
-      padding: 4px 2px;
-      text-align: center;
-      box-shadow: 0 3px 8px #57406012;
-      overflow: hidden;
-    }
-
-    .cell .number {
-      position: absolute;
-      left: 5px;
-      top: 3px;
-      font-size: 10px;
-      font-weight: 900;
-      opacity: .7;
-    }
-
-    .cell .emoji {
-      font-size: clamp(16px, 2.6vw, 27px);
-      line-height: 1;
-    }
-
-    .cell .cell-name {
-      font-size: clamp(8px, 1.15vw, 11px);
-      line-height: 1.15;
-      font-weight: bold;
-      overflow-wrap: anywhere;
-    }
-
-    .cell.start {
-      background: #d7f3e3;
-    }
-
-    .cell.question {
-      background: #e5e0ff;
-    }
-
-    .cell.challenge {
-      background: #ffedbb;
-    }
-
-    .cell.bonus {
-      background: #d8edff;
-    }
-
-    .cell.warning {
-      background: #ffdce4;
-    }
-
-    .cell.finish {
-      background: #c9f0d9;
-      border-color: #76c99c;
-    }
-
-    .cell.current {
-      outline: 3px solid #d96d9e;
-      outline-offset: -3px;
-    }
-
-    .tokens {
-      display: flex;
-      gap: 2px;
-      flex-wrap: wrap;
-      justify-content: center;
-      min-height: 17px;
-    }
-
-    .token {
-      width: 18px;
-      height: 18px;
-      border-radius: 50%;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 10px;
-      font-weight: 900;
-      color: white;
-      border: 2px solid white;
-      box-shadow: 0 1px 3px #33333325;
-    }
-
-    .legend {
-      display: flex;
-      gap: 9px 13px;
-      flex-wrap: wrap;
-      padding: 13px 3px 2px;
-      font-size: 11px;
-      color: #6d5b70;
-    }
-
-    .legend span {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-    }
-
-    .side-panel {
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-    }
-
-    .turn-card {
-      background: linear-gradient(140deg, #fff0f7, #f1edff);
-      border: 1px solid #ffffff;
-      border-radius: 22px;
-      padding: 18px;
-      text-align: center;
-      box-shadow: var(--sombra);
-    }
-
-    .turn-card h2 {
-      margin: 0 0 6px;
-      font-size: 19px;
-      color: #75567d;
-    }
-
-    .turn-label {
-      font-size: 13px;
-      color: #806b85;
-    }
-
-    .die {
-      display: block;
-      margin: 15px auto;
-      width: 88px;
-      height: 88px;
-      border: 3px solid #ffffff;
-      border-radius: 23px;
-      background: white;
-      color: #8d68ad;
-      font-size: 57px;
-      box-shadow: 0 7px 20px #775a8622;
-      line-height: 1;
-    }
-
-    .die.rolling {
-      animation: roll .45s ease-in-out;
-    }
-
-    @keyframes roll {
-      0% { transform: rotate(0deg) scale(1); }
-      35% { transform: rotate(18deg) scale(1.08); }
-      70% { transform: rotate(-18deg) scale(.94); }
-      100% { transform: rotate(0deg) scale(1); }
-    }
-
-    .roll-btn {
-      width: 100%;
-      padding: 14px;
-      border-radius: 14px;
-      background: linear-gradient(135deg, #d979a7, #a18bd7);
-      color: white;
-      font-weight: 900;
-      font-size: 16px;
-    }
-
-    .small-note {
-      font-size: 12px;
-      line-height: 1.5;
-      color: #87758a;
-      margin: 12px 0 0;
-    }
-
-    .players-list {
-      display: flex;
-      flex-direction: column;
-      gap: 9px;
-    }
-
-    .player-row {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      background: #fff8fc;
-      border: 2px solid transparent;
-      border-radius: 13px;
-      padding: 10px;
-    }
-
-    .player-row.active {
-      border-color: #d979a7;
-      background: #fff0f7;
-    }
-
-    .player-avatar {
-      width: 36px;
-      height: 36px;
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      font-weight: 900;
-      flex-shrink: 0;
-    }
-
-    .player-info {
-      min-width: 0;
-      flex: 1;
-    }
-
-    .player-info strong {
-      display: block;
-      font-size: 13px;
-    }
-
-    .player-info small {
-      color: #87758a;
-      font-size: 11px;
-    }
-
-    .player-score {
-      font-weight: 900;
-      color: #795a91;
-      font-size: 13px;
-      white-space: nowrap;
-    }
-
-    .question-card {
-      background: white;
-      border: 2px solid #e7ddff;
-      border-radius: 20px;
-      padding: 18px;
-      box-shadow: var(--sombra);
-    }
-
-    .question-card h2 {
-      margin: 0 0 9px;
-      font-size: 18px;
-      color: #75567d;
-    }
-
-    .question-type {
-      display: inline-block;
-      margin-bottom: 9px;
-      background: #f0e9ff;
-      color: #7963a4;
-      border-radius: 20px;
-      padding: 5px 9px;
-      font-size: 10px;
-      font-weight: 900;
-      letter-spacing: .6px;
-    }
-
-    .question-text {
-      font-size: 14px;
-      line-height: 1.55;
-      margin: 0 0 13px;
-    }
-
-    .answers {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .answer-btn {
-      width: 100%;
-      text-align: left;
-      padding: 11px 12px;
-      border-radius: 12px;
-      background: #faf7ff;
-      border: 1px solid #e8def7;
-      color: var(--texto);
-      font-size: 13px;
-      line-height: 1.4;
-    }
-
-    .answer-btn.correct {
-      background: #dff6e8;
-      border-color: #79c99c;
-    }
-
-    .answer-btn.incorrect {
-      background: #ffe4e9;
-      border-color: #e9a0b1;
-    }
-
-    .answer-btn:disabled {
-      opacity: 1;
-    }
-
-    .feedback {
-      margin-top: 12px;
-      padding: 11px;
-      border-radius: 12px;
-      font-size: 13px;
-      line-height: 1.5;
-      background: #f8f4ff;
-      display: none;
-    }
-
-    .feedback.show {
-      display: block;
-    }
-
-    .continue-btn {
-      display: none;
-      margin-top: 11px;
-      width: 100%;
-      background: #7964a5;
-      color: white;
-      border-radius: 12px;
-      padding: 12px;
-      font-weight: bold;
-    }
-
-    .continue-btn.show {
-      display: block;
-    }
-
-    .rules-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
-    }
-
-    .rule {
-      background: #fff8fc;
-      border-radius: 15px;
-      padding: 13px;
-      font-size: 12px;
-      line-height: 1.55;
-    }
-
-    .rule strong {
-      display: block;
-      color: #795a91;
-      margin-bottom: 5px;
-      font-size: 13px;
-    }
-
-    .achievement {
-      padding: 10px;
-      border-radius: 12px;
-      background: #f8f5ff;
-      font-size: 12px;
-      margin-bottom: 7px;
-    }
-
-    .achievement.locked {
-      opacity: .5;
-      filter: grayscale(.6);
-    }
-
-    .achievement strong {
-      display: block;
-      margin-bottom: 3px;
-    }
-
-    .status-message {
-      font-size: 13px;
-      line-height: 1.5;
-      color: #735b7a;
-      margin: 10px 0 0;
-      min-height: 20px;
-    }
-
-    .footer {
-      text-align: center;
-      padding: 12px 10px 28px;
-      font-size: 12px;
-      color: #8c7891;
-    }
-
-    .overlay {
-      position: fixed;
-      inset: 0;
-      background: #34223e9c;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      padding: 18px;
-      z-index: 10;
-    }
-
-    .overlay.show {
-      display: flex;
-    }
-
-    .modal {
-      width: min(440px, 100%);
-      background: linear-gradient(145deg, #fff8fc, #f1edff);
-      border: 3px solid white;
-      border-radius: 25px;
-      padding: 27px;
-      text-align: center;
-      box-shadow: 0 15px 55px #00000030;
-    }
-
-    .modal .trophy {
-      font-size: 55px;
-    }
-
-    .modal h2 {
-      color: #75567d;
-      margin: 8px 0;
-    }
-
-    .modal p {
-      line-height: 1.6;
-      font-size: 14px;
-    }
-
-    @media (max-width: 800px) {
-      .game-layout {
-        grid-template-columns: 1fr;
-      }
-
-      .side-panel {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        align-items: start;
-      }
-
-      .turn-card {
-        grid-row: span 2;
-      }
-    }
-
-    @media (max-width: 540px) {
-      main {
-        padding: 12px 9px 25px;
-      }
-
-      .panel {
-        padding: 12px;
-        border-radius: 17px;
-      }
-
-      .side-panel {
-        display: flex;
-      }
-
-      .board {
-        gap: 4px;
-      }
-
-      .cell {
-        border-radius: 9px;
-        gap: 3px;
-      }
-
-      .cell .number {
-        left: 3px;
-        top: 2px;
-        font-size: 8px;
-      }
-
-      .cell .cell-name {
-        font-size: 8px;
-      }
-
-      .token {
-        width: 15px;
-        height: 15px;
-        font-size: 8px;
-      }
-
-      .rules-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .hero::before {
-        left: 2%;
-      }
-
-      .hero::after {
-        right: 2%;
-      }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Trilha da Saúde</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#fff6fb;color:#49384f;font-family:Arial,sans-serif}
+header{text-align:center;padding:20px 10px 12px}
+header h1{color:#b34e91;margin:5px;font-size:30px}
+header p{font-size:14px;line-height:1.5;margin:8px auto;max-width:500px}
+main{width:min(100% - 16px,650px);margin:auto}
+.painel{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
+.jogador{background:white;border:2px solid #ead7e9;border-radius:14px;padding:10px;display:flex;align-items:center;gap:7px;font-size:13px}
+.jogador.ativo{border-color:#e65ba4}
+.avatar{font-size:23px}
+.pontos{margin-left:auto;color:#ae4a8b;font-weight:bold}
+.status{text-align:center;background:white;border-radius:12px;padding:12px;margin-bottom:10px;font-weight:bold;font-size:13px}
+.tabuleiro-box{background:white;padding:8px;border-radius:20px;border:1px solid #ead8e8;box-shadow:0 5px 20px #75507712}
+.legenda{display:flex;justify-content:center;flex-wrap:wrap;gap:10px;font-size:11px;margin:5px 0 12px;color:#75637c}
+#tabuleiro{position:relative;width:100%;aspect-ratio:0.79;max-height:760px;overflow:hidden;border-radius:15px;background:#fffafd}
+#trilha{position:absolute;inset:0;width:100%;height:100%}
+.casa{position:absolute;width:8.4%;aspect-ratio:1;transform:translate(-50%,-50%);border:2px solid white;outline:1.5px solid #554258;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-direction:column;color:white;font-size:clamp(10px,2.5vw,15px);font-weight:bold;z-index:2;box-shadow:0 2px 3px #0001}
+.casa.especial{border-radius:50%;outline:2px solid #554258}
+.casa.inicio,.casa.chegada{width:13%;aspect-ratio:1;border-radius:50%;font-size:clamp(9px,2vw,12px);text-align:center;line-height:1.1;border:3px solid white;outline:2px solid #554258}
+.casa.inicio{background:#ffad64!important;color:#49384f}
+.casa.chegada{background:#39a875!important}
+.token{display:none;position:absolute;right:-6px;bottom:-6px;width:21px;height:21px;border:2px solid white;border-radius:50%;align-items:center;justify-content:center;font-size:12px;z-index:5}
+.token.visivel{display:flex}
+.token.voce{background:#e84c9a}
+.token.robo{background:#7561b2}
+.casa.atual-voce{outline:3px solid #e84c9a}
+.casa.atual-robo{outline:3px solid #7561b2}
+.controles{display:grid;grid-template-columns:72px 1fr;gap:10px;margin-top:12px;align-items:center}
+.dado{height:65px;background:#fff0f8;border:1px solid #f0cde2;border-radius:13px;display:grid;place-items:center}
+#faceDado{font-size:33px}
+.dado small{font-size:9px;color:#806c87}
+button{font-family:inherit;cursor:pointer;font-weight:bold}
+.principal{background:linear-gradient(110deg,#e967a8,#a889d6);color:white;border:0;border-radius:13px;padding:15px;width:100%;min-height:50px;font-size:15px}
+button:disabled{opacity:.5;cursor:not-allowed}
+#mensagem{text-align:center;font-size:12px;min-height:25px;padding:9px 0;color:#a34b89}
+.regras{font-size:12px;line-height:1.7;background:white;border:1px solid #ead8e8;border-radius:13px;padding:12px;margin:10px 0}
+.secundario{background:white;color:#a34b89;border:1px solid #e8cde0;padding:10px 15px;border-radius:11px}
+.centro{text-align:center;margin:12px}
+.modal{position:fixed;inset:0;background:#302039b8;display:none;align-items:center;justify-content:center;padding:14px;z-index:99}
+.modal.aberto{display:flex}
+.conteudo{background:white;width:min(100%,420px);max-height:90dvh;overflow:auto;padding:22px 17px;border-radius:22px;box-shadow:0 10px 40px #0003}
+.topo{text-align:center}
+.icone{font-size:34px}
+.etiqueta{display:inline-block;background:#fce5f3;color:#ae4a8b;padding:6px 10px;border-radius:20px;font-size:10px;font-weight:bold}
+h2{color:#ae4a8b;font-size:23px}
+#pergunta{font-size:15px;line-height:1.5;font-weight:bold;margin:15px 0}
+#respostas{display:grid;gap:8px}
+.resposta{padding:12px;border:2px solid #efdfed;border-radius:12px;background:#fff8fc;color:#49384f;text-align:left;font-size:13px;line-height:1.4}
+.resposta.correta{background:#e7f8ed;border-color:#56b78b}
+.resposta.errada{background:#fff0f0;border-color:#ed7884}
+#resultado{display:none;padding:12px;border-radius:11px;font-size:13px;line-height:1.5;margin-top:12px}
+#resultado.visivel{display:block}
+.bom{background:#e7f8ed;color:#26794f}
+.ruim{background:#fff0f0;color:#a23e4d}
+#continuar{display:none;margin-top:12px}
+#continuar.visivel{display:block}
+#fim h2{text-align:center}
+@media(min-width:500px){#tabuleiro{aspect-ratio:.82}.casa{width:8.5%}}
+@media(max-width:360px){.jogador{padding:8px 5px;font-size:11px}.casa{width:8.7%;border-radius:7px}.casa.inicio,.casa.chegada{width:13.5%}}
+</style>
 </head>
-
 <body>
-  <header class="hero">
-    <div class="logo">🏥 JOGO EDUCATIVO • SAÚDE</div>
-    <h1>CLINICARE 360°</h1>
-    <p>Uma missão pela qualidade no atendimento e pela melhoria contínua na recepção da saúde.</p>
-  </header>
-
-  <main>
-    <section class="panel">
-      <h2 class="section-title">🎮 Preparar a partida</h2>
-      <div class="setup">
-        <label for="playerCount">Quantidade de jogadores:</label>
-        <select id="playerCount">
-          <option value="2">2 jogadores</option>
-          <option value="3">3 jogadores</option>
-          <option value="4">4 jogadores</option>
-        </select>
-        <button class="primary-btn" id="startBtn">Começar jogo ✨</button>
-        <button class="secondary-btn" id="resetBtn">Reiniciar</button>
-      </div>
-      <p class="small-note">Cada jogador precisa chegar à casa 25. Role o dado, responda às perguntas e tome decisões que melhorem a qualidade do atendimento.</p>
-    </section>
-
-    <div class="game-layout">
-      <section class="panel board-panel">
-        <div class="board-heading">
-          <h2>🩺 Tabuleiro da qualidade</h2>
-          <span>INÍCIO → MISSÃO → VITÓRIA</span>
-        </div>
-
-        <div id="board" class="board" aria-label="Tabuleiro do jogo"></div>
-
-        <div class="legend">
-          <span>🟣 Pergunta</span>
-          <span>🟡 Desafio</span>
-          <span>🔵 Bônus</span>
-          <span>🩷 Atenção</span>
-          <span>🟢 Início/final</span>
-        </div>
-      </section>
-
-      <aside class="side-panel">
-        <section class="turn-card">
-          <h2>🎲 Sua vez!</h2>
-          <div class="turn-label" id="turnLabel">Comece uma partida para jogar.</div>
-          <button id="die" class="die" aria-label="Dado">🎲</button>
-          <button id="rollBtn" class="roll-btn">LANÇAR DADO</button>
-          <p class="small-note">O dado avança de 1 a 6 casas. Cada decisão pode valer pontos!</p>
-          <p id="status" class="status-message">Prepare a equipe para começar.</p>
-        </section>
-
-        <section class="panel" style="margin:0">
-          <h2 class="section-title">👥 Jogadores</h2>
-          <div id="playersList" class="players-list"></div>
-        </section>
-
-        <section class="panel" style="margin:0">
-          <h2 class="section-title">🏆 Conquistas</h2>
-          <div id="achievements">
-            <div class="achievement locked"><strong>🔒 Primeiro passo</strong>Comece sua jornada.</div>
-            <div class="achievement locked"><strong>🔒 Atendimento nota 10</strong>Acerte 5 perguntas.</div>
-            <div class="achievement locked"><strong>🔒 Agente da qualidade</strong>Chegue à casa final.</div>
-          </div>
-        </section>
-
-        <section class="question-card" id="questionCard">
-          <span class="question-type">CENTRAL DE MISSÕES</span>
-          <h2>📋 Sua missão</h2>
-          <p class="question-text">Role o dado para avançar pelo tabuleiro. Nas casas especiais, você terá que responder perguntas ou enfrentar desafios.</p>
-          <p class="small-note">Dica: qualidade significa atender com segurança, respeito, organização e vontade de melhorar sempre.</p>
-        </section>
-      </aside>
-    </div>
-
-    <section class="panel">
-      <h2 class="section-title">📖 Como jogar</h2>
-      <div class="rules-grid">
-        <div class="rule">
-          <strong>🎲 1. Lance o dado</strong>
-          Na sua vez, clique em “Lançar dado”. Seu peão avançará pelo tabuleiro.
-        </div>
-        <div class="rule">
-          <strong>🧠 2. Resolva a missão</strong>
-          Responda às perguntas sobre qualidade, segurança do paciente, sigilo e atendimento humanizado.
-        </div>
-        <div class="rule">
-          <strong>🏁 3. Conquiste a vitória</strong>
-          O primeiro jogador a chegar à casa 25 vence. Respostas certas rendem pontos extras.
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <footer class="footer">
-    CLINICARE 360° • Aprender, acolher e melhorar sempre 💗
-  </footer>
-
-  <div class="overlay" id="victoryOverlay" role="dialog" aria-modal="true">
-    <div class="modal">
-      <div class="trophy">🏆</div>
-      <h2 id="victoryTitle">Missão concluída!</h2>
-      <p id="victoryText"></p>
-      <button class="primary-btn" id="playAgainBtn">Jogar novamente</button>
-    </div>
-  </div>
-
-  <script>
-    const spaces = [
-      { name: "Início", emoji: "🚪", type: "start" },
-      { name: "Acolhimento", emoji: "💗", type: "question" },
-      { name: "Cadastro", emoji: "📝", type: "question" },
-      { name: "Bônus", emoji: "⭐", type: "bonus" },
-      { name: "Sigilo", emoji: "🔐", type: "question" },
-      { name: "Desafio", emoji: "🧩", type: "challenge" },
-      { name: "Escuta", emoji: "👂", type: "question" },
-      { name: "Organização", emoji: "📋", type: "question" },
-      { name: "Atenção", emoji: "⚠️", type: "warning" },
-      { name: "Segurança", emoji: "🛡️", type: "question" },
-      { name: "Bônus", emoji: "⭐", type: "bonus" },
-      { name: "Equipe", emoji: "🤝", type: "question" },
-      { name: "Desafio", emoji: "🧩", type: "challenge" },
-      { name: "Empatia", emoji: "💞", type: "question" },
-      { name: "Cadastro", emoji: "📝", type: "question" },
-      { name: "Melhoria", emoji: "📈", type: "question" },
-      { name: "Atenção", emoji: "⚠️", type: "warning" },
-      { name: "Qualidade", emoji: "🌟", type: "question" },
-      { name: "Bônus", emoji: "⭐", type: "bonus" },
-      { name: "Desafio", emoji: "🧩", type: "challenge" },
-      { name: "Respeito", emoji: "🤍", type: "question" },
-      { name: "PDCA", emoji: "🔄", type: "question" },
-      { name: "Segurança", emoji: "🛡️", type: "question" },
-      { name: "Última missão", emoji: "🏥", type: "question" },
-      { name: "Vitória!", emoji: "🏆", type: "finish" }
-    ];
-
-    const questions = [
-      {
-        category: "ATENDIMENTO HUMANIZADO",
-        question: "Um paciente chega nervoso e preocupado. Qual é a melhor atitude da recepção?",
-        answers: [
-          "Mandar o paciente esperar sem explicar nada.",
-          "Ouvir com respeito, falar com calma e orientar.",
-          "Ignorar o paciente e continuar mexendo no celular."
-        ],
-        correct: 1,
-        explanation: "Acolher, ouvir e orientar com respeito ajuda o paciente a se sentir seguro.",
-        points: 10
-      },
-      {
-        category: "CADASTRO SEGURO",
-        question: "Antes de encaminhar uma pessoa para atendimento, o que a recepção deve fazer?",
-        answers: [
-          "Confirmar a identidade e os dados necessários.",
-          "Usar os dados do paciente que chegou antes.",
-          "Pular a conferência para ganhar tempo."
-        ],
-        correct: 0,
-        explanation: "Conferir os dados ajuda a evitar erros de identificação.",
-        points: 10
-      },
-      {
-        category: "SIGILO E LGPD",
-        question: "Um conhecido pergunta sobre o diagnóstico de um paciente. O que fazer?",
-        answers: [
-          "Contar, porque é uma pessoa conhecida.",
-          "Mostrar o cadastro para provar que sabe.",
-          "Preservar o sigilo e não compartilhar dados sem autorização."
-        ],
-        correct: 2,
-        explanation: "Informações pessoais e de saúde devem ser protegidas.",
-        points: 10
-      },
-      {
-        category: "SEGURANÇA DO PACIENTE",
-        question: "Por que é importante confirmar a identidade do paciente?",
-        answers: [
-          "Só para deixar a ficha mais bonita.",
-          "Para reduzir o risco de erros no atendimento.",
-          "Porque todos os pacientes têm os mesmos dados."
-        ],
-        correct: 1,
-        explanation: "A identificação correta é uma medida importante para a segurança do paciente.",
-        points: 10
-      },
-      {
-        category: "MELHORIA CONTÍNUA",
-        question: "A recepção percebe que muitos pacientes estão esperando além do previsto. Qual é a melhor atitude?",
-        answers: [
-          "Investigar a causa e buscar melhorias no processo.",
-          "Fingir que o problema não existe.",
-          "Culpar os pacientes pela demora."
-        ],
-        correct: 0,
-        explanation: "Melhorar continuamente envolve identificar problemas, analisar causas e testar soluções.",
-        points: 10
-      },
-      {
-        category: "TRABALHO EM EQUIPE",
-        question: "Um colega percebe um erro no cadastro. O que a equipe deve fazer?",
-        answers: [
-          "Esconder o erro para evitar conversa.",
-          "Corrigir conforme o procedimento e comunicar os responsáveis.",
-          "Deixar o próximo turno resolver."
-        ],
-        correct: 1,
-        explanation: "Comunicação e correção responsável ajudam a evitar que o erro se repita.",
-        points: 10
-      },
-      {
-        category: "QUALIDADE",
-        question: "O que significa oferecer um atendimento de qualidade?",
-        answers: [
-          "Atender rápido, mesmo cometendo erros.",
-          "Atender apenas quem reclama.",
-          "Atender com segurança, respeito, organização e eficiência."
-        ],
-        correct: 2,
-        explanation: "Qualidade envolve segurança, respeito, eficiência e atenção às necessidades do paciente.",
-        points: 10
-      },
-      {
-        category: "CICLO PDCA",
-        question: "Para que serve o ciclo PDCA na melhoria contínua?",
-        answers: [
-          "Planejar, executar, verificar e agir para melhorar.",
-          "Organizar somente os horários de almoço.",
-          "Evitar avaliar os resultados."
-        ],
-        correct: 0,
-        explanation: "PDCA significa Plan, Do, Check e Act: planejar, fazer, verificar e agir.",
-        points: 10
-      },
-      {
-        category: "COMUNICAÇÃO",
-        question: "Um paciente não entendeu a orientação recebida. O que a recepção deve fazer?",
-        answers: [
-          "Repetir mais alto, sem explicar.",
-          "Explicar novamente com clareza e confirmar se ele entendeu.",
-          "Dizer que não é problema da recepção."
-        ],
-        correct: 1,
-        explanation: "A comunicação clara reduz dúvidas e melhora a experiência do paciente.",
-        points: 10
-      },
-      {
-        category: "BIOSSEGURANÇA",
-        question: "Qual atitude ajuda a prevenir a transmissão de microrganismos na unidade de saúde?",
-        answers: [
-          "Compartilhar materiais sem higienização.",
-          "Tocar em tudo e continuar atendendo.",
-          "Higienizar as mãos e seguir os protocolos de prevenção."
-        ],
-        correct: 2,
-        explanation: "Higienizar as mãos e seguir os protocolos são medidas essenciais de prevenção.",
-        points: 10
-      },
-      {
-        category: "PRIORIZAÇÃO",
-        question: "A recepção percebe que uma pessoa pode precisar de atendimento urgente. O que fazer?",
-        answers: [
-          "Seguir o protocolo da unidade e acionar a equipe assistencial.",
-          "Mandar a pessoa voltar outro dia.",
-          "Decidir sozinho o diagnóstico."
-        ],
-        correct: 0,
-        explanation: "A recepção deve seguir o fluxo estabelecido e acionar a equipe responsável, sem tentar diagnosticar.",
-        points: 10
-      },
-      {
-        category: "MELHORIA CONTÍNUA",
-        question: "Qual é um exemplo de indicador que ajuda a avaliar a qualidade da recepção?",
-        answers: [
-          "A cor das paredes da sala.",
-          "O tempo de espera e a satisfação dos pacientes.",
-          "A quantidade de enfeites no balcão."
-        ],
-        correct: 1,
-        explanation: "Indicadores ajudam a acompanhar resultados e identificar o que precisa melhorar.",
-        points: 10
-      }
-    ];
-
-    const playersColors = ["#d96d9e", "#7b6bb2", "#4e9e86", "#df9b4c"];
-    const playersNames = ["Jogador Rosa", "Jogador Lilás", "Jogador Verde", "Jogador Laranja"];
-    const playerIcons = ["🌸", "💜", "🌿", "⭐"];
-
-    let players = [];
-    let currentPlayer = 0;
-    let gameStarted = false;
-    let gameOver = false;
-    let waitingForAnswer = false;
-    let questionIndex = 0;
-    let answeredCount = 0;
-    let correctCount = 0;
-    let questionDeck = [];
-    let lastRoll = 0;
-
-    const board = document.getElementById("board");
-    const die = document.getElementById("die");
-    const rollBtn = document.getElementById("rollBtn");
-    const turnLabel = document.getElementById("turnLabel");
-    const status = document.getElementById("status");
-    const playersList = document.getElementById("playersList");
-    const questionCard = document.getElementById("questionCard");
-    const achievements = document.getElementById("achievements");
-    const overlay = document.getElementById("victoryOverlay");
-
-    function shuffle(array) {
-      const copy = [...array];
-      for (let i = copy.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [copy[i], copy[j]] = [copy[j], copy[i]];
-      }
-      return copy;
-    }
-
-    function createBoard() {
-      board.innerHTML = "";
-
-      spaces.forEach((space, index) => {
-        const cell = document.createElement("div");
-        cell.className = `cell ${space.type}`;
-        cell.id = `cell-${index}`;
-        cell.innerHTML = `
-          <span class="number">${index + 1}</span>
-          <span class="emoji">${space.emoji}</span>
-          <span class="cell-name">${space.name}</span>
-          <div class="tokens" id="tokens-${index}"></div>
-        `;
-        board.appendChild(cell);
-      });
-
-      updateTokens();
-    }
-
-    function createPlayers(count) {
-      players = Array.from({ length: count }, (_, index) => ({
-        id: index,
-        name: playersNames[index],
-        icon: playerIcons[index],
-        color: playersColors[index],
-        position: 0,
-        score: 0,
-        correct: 0,
-        finished: false,
-        achievements: []
-      }));
-    }
-
-    function updateTokens() {
-      document.querySelectorAll(".tokens").forEach(el => el.innerHTML = "");
-      document.querySelectorAll(".cell").forEach(el => el.classList.remove("current"));
-
-      players.forEach(player => {
-        const tokenArea = document.getElementById(`tokens-${player.position}`);
-        if (tokenArea) {
-          const token = document.createElement("span");
-          token.className = "token";
-          token.style.background = player.color;
-          token.title = player.name;
-          token.textContent = player.icon;
-          tokenArea.appendChild(token);
-        }
-      });
-
-      if (players[currentPlayer]) {
-        const cell = document.getElementById(`cell-${players[currentPlayer].position}`);
-        if (cell) cell.classList.add("current");
-      }
-    }
-
-    function updatePlayers() {
-      playersList.innerHTML = "";
-
-      players.forEach((player, index) => {
-        const row = document.createElement("div");
-        row.className = "player-row" + (index === currentPlayer && gameStarted && !gameOver ? " active" : "");
-        row.innerHTML = `
-          <div class="player-avatar" style="background:${player.color}">${player.icon}</div>
-          <div class="player-info">
-            <strong>${player.name}</strong>
-            <small>${player.finished ? "🏁 Chegou ao final!" : `Casa ${player.position + 1} de 25`}</small>
-          </div>
-          <div class="player-score">${player.score} pts</div>
-        `;
-        playersList.appendChild(row);
-      });
-
-      updateAchievements();
-    }
-
-    function updateAchievements() {
-      const hasStarted = gameStarted;
-      const fiveCorrect = players.some(player => player.correct >= 5);
-      const hasWinner = players.some(player => player.finished);
-
-      achievements.innerHTML = `
-        <div class="achievement ${hasStarted ? "" : "locked"}">
-          <strong>${hasStarted ? "🌟" : "🔒"} Primeiro passo</strong>
-          ${hasStarted ? "A jornada pela qualidade começou!" : "Comece sua jornada."}
-        </div>
-        <div class="achievement ${fiveCorrect ? "" : "locked"}">
-          <strong>${fiveCorrect ? "🧠" : "🔒"} Atendimento nota 10</strong>
-          ${fiveCorrect ? "Um jogador acertou 5 perguntas!" : "Acerte 5 perguntas."}
-        </div>
-        <div class="achievement ${hasWinner ? "" : "locked"}">
-          <strong>${hasWinner ? "🏆" : "🔒"} Agente da qualidade</strong>
-          ${hasWinner ? "Missão concluída!" : "Chegue à casa final."}
-        </div>
-      `;
-    }
-
-    function updateTurn() {
-      if (!gameStarted) {
-        turnLabel.textContent = "Comece uma partida para jogar.";
-        return;
-      }
-
-      if (gameOver) {
-        turnLabel.textContent = "Partida encerrada!";
-        return;
-      }
-
-      const player = players[currentPlayer];
-      turnLabel.textContent = `Vez de ${player.name} ${player.icon}`;
-    }
-
-    function showIntro() {
-      questionCard.innerHTML = `
-        <span class="question-type">CENTRAL DE MISSÕES</span>
-        <h2>📋 Sua missão</h2>
-        <p class="question-text">Role o dado para avançar pelo tabuleiro. Nas casas especiais, responda perguntas e enfrente desafios.</p>
-        <p class="small-note">Qualidade é atender com segurança, respeito, organização e vontade de melhorar sempre.</p>
-      `;
-    }
-
-    function startGame() {
-      const count = Number(document.getElementById("playerCount").value);
-      createPlayers(count);
-      currentPlayer = 0;
-      gameStarted = true;
-      gameOver = false;
-      waitingForAnswer = false;
-      answeredCount = 0;
-      correctCount = 0;
-      lastRoll = 0;
-      questionDeck = shuffle(questions);
-      questionIndex = 0;
-      die.textContent = "🎲";
-      rollBtn.disabled = false;
-      rollBtn.textContent = "LANÇAR DADO";
-      overlay.classList.remove("show");
-      status.textContent = "Partida iniciada! Boa sorte para toda a equipe.";
-      showIntro();
-      updateTurn();
-      updatePlayers();
-      createBoard();
-    }
-
-    function getNextQuestion() {
-      if (questionIndex >= questionDeck.length) {
-        questionDeck = shuffle(questions);
-        questionIndex = 0;
-      }
-      return questionDeck[questionIndex++];
-    }
-
-    function showQuestion(question) {
-      waitingForAnswer = true;
-      rollBtn.disabled = true;
-
-      questionCard.innerHTML = `
-        <span class="question-type">${question.category}</span>
-        <h2>🧠 Desafio da qualidade</h2>
-        <p class="question-text">${question.question}</p>
-        <div class="answers">
-          ${question.answers.map((answer, index) => `
-            <button class="answer-btn" data-answer="${index}">${String.fromCharCode(65 + index)}. ${answer}</button>
-          `).join("")}
-        </div>
-        <div class="feedback" id="feedback"></div>
-        <button class="continue-btn" id="continueBtn">Continuar jogo ➜</button>
-      `;
-
-      questionCard.querySelectorAll(".answer-btn").forEach(button => {
-        button.addEventListener("click", () => {
-          answerQuestion(Number(button.dataset.answer), question);
-        });
-      });
-
-      status.textContent = `${players[currentPlayer].name}, responda para concluir sua missão.`;
-    }
-
-    function answerQuestion(answer, question) {
-      if (!waitingForAnswer) return;
-
-      waitingForAnswer = false;
-      answeredCount++;
-      const player = players[currentPlayer];
-      const buttons = questionCard.querySelectorAll(".answer-btn");
-      const feedback = document.getElementById("feedback");
-      const continueBtn = document.getElementById("continueBtn");
-
-      buttons.forEach((button, index) => {
-        button.disabled = true;
-        if (index === question.correct) button.classList.add("correct");
-        if (index === answer && answer !== question.correct) button.classList.add("incorrect");
-      });
-
-      if (answer === question.correct) {
-        player.score += question.points;
-        player.correct++;
-        correctCount++;
-        feedback.innerHTML = `✅ <strong>Resposta correta! +${question.points} pontos</strong><br>${question.explanation}`;
-        status.textContent = `${player.name} acertou! Mandou bem na qualidade.`;
-      } else {
-        feedback.innerHTML = `💡 <strong>Não foi dessa vez.</strong><br>${question.explanation}<br><br>Continue aprendendo: melhorar também faz parte da qualidade.`;
-        status.textContent = `${player.name} concluiu a pergunta. A próxima missão vem aí!`;
-      }
-
-      feedback.classList.add("show");
-      continueBtn.classList.add("show");
-      continueBtn.addEventListener("click", finishTurn, { once: true });
-
-      updatePlayers();
-    }
-
-    function showChallenge(space) {
-      const player = players[currentPlayer];
-      waitingForAnswer = true;
-      rollBtn.disabled = true;
-
-      let title = "🧩 Desafio especial";
-      let message = "";
-      let action = "Entendi, continuar ➜";
-      let effect = null;
-
-      if (space.type === "bonus") {
-        title = "⭐ Bônus da qualidade!";
-        message = "Sua equipe organizou o fluxo de atendimento e ajudou os pacientes a receberem orientações claras. Você ganhou 10 pontos!";
-        effect = () => player.score += 10;
-      } else if (space.type === "warning") {
-        title = "⚠️ Atenção: falha no processo!";
-        message = "Um cadastro ficou incompleto. Pare, confira os dados e siga o procedimento correto. Você perdeu uma oportunidade de ganhar pontos, mas aprendeu uma lição importante.";
-        effect = () => {};
-      } else if (space.type === "challenge") {
-        title = "🧩 Missão relâmpago!";
-        message = "Desafio: diga em voz alta uma atitude que melhora o atendimento na recepção da saúde. Se a equipe conseguir dar um exemplo válido, ganhe 5 pontos!";
-        action = "Conseguimos! +5 pontos ➜";
-        effect = () => player.score += 5;
-      }
-
-      questionCard.innerHTML = `
-        <span class="question-type">CASA ESPECIAL</span>
-        <h2>${title}</h2>
-        <p class="question-text">${message}</p>
-        <button class="primary-btn" id="challengeBtn">${action}</button>
-      `;
-
-      document.getElementById("challengeBtn").addEventListener("click", () => {
-        if (effect) effect();
-        waitingForAnswer = false;
-        status.textContent = space.type === "bonus"
-          ? `${player.name} ganhou 10 pontos de bônus!`
-          : space.type === "challenge"
-            ? `${player.name} ganhou 5 pontos pelo desafio!`
-            : "Atenção redobrada: prevenir erros faz parte da qualidade.";
-        updatePlayers();
-        finishTurn();
-      }, { once: true });
-    }
-
-    function finishTurn() {
-      if (gameOver) return;
-
-      const player = players[currentPlayer];
-
-      if (player.position >= spaces.length - 1) {
-        player.finished = true;
-        endGame(player);
-        return;
-      }
-
-      currentPlayer = (currentPlayer + 1) % players.length;
-
-      let attempts = 0;
-      while (players[currentPlayer].finished && attempts < players.length) {
-        currentPlayer = (currentPlayer + 1) % players.length;
-        attempts++;
-      }
-
-      updateTurn();
-      updatePlayers();
-      updateTokens();
-      rollBtn.disabled = false;
-      rollBtn.textContent = "LANÇAR DADO";
-      die.textContent = "🎲";
-      showIntro();
-    }
-
-    function rollDie() {
-      if (!gameStarted || gameOver || waitingForAnswer) return;
-
-      const player = players[currentPlayer];
-      if (!player || player.finished) return;
-
-      rollBtn.disabled = true;
-      die.classList.remove("rolling");
-      void die.offsetWidth;
-      die.classList.add("rolling");
-
-      const result = Math.floor(Math.random() * 6) + 1;
-      lastRoll = result;
-      die.textContent = ["⚀", "⚁", "⚂", "⚃", "⚄", "⚅"][result - 1];
-
-      window.setTimeout(() => {
-        die.classList.remove("rolling");
-
-        const oldPosition = player.position;
-        player.position = Math.min(player.position + result, spaces.length - 1);
-        const space = spaces[player.position];
-
-        status.textContent = `${player.name} tirou ${result} e avançou da casa ${oldPosition + 1} para a casa ${player.position + 1}.`;
-
-        updateTokens();
-        updatePlayers();
-
-        if (player.position >= spaces.length - 1) {
-          player.finished = true;
-          endGame(player);
-          return;
-        }
-
-        if (space.type === "question") {
-          showQuestion(getNextQuestion());
-        } else if (space.type === "bonus" || space.type === "warning" || space.type === "challenge") {
-          showChallenge(space);
-        } else {
-          finishTurn();
-        }
-      }, 450);
-    }
-
-    function endGame(winner) {
-      gameOver = true;
-      waitingForAnswer = false;
-      rollBtn.disabled = true;
-      rollBtn.textContent = "PARTIDA ENCERRADA";
-      turnLabel.textContent = "Temos uma equipe vencedora!";
-      status.textContent = `${winner.name} concluiu a missão da qualidade!`;
-      updatePlayers();
-      updateTokens();
-
-      document.getElementById("victoryTitle").textContent = `🏆 ${winner.name} venceu!`;
-      document.getElementById("victoryText").textContent =
-        `Parabéns! Você chegou ao final com ${winner.score} pontos e mostrou que qualidade no atendimento significa acolher, proteger, organizar e melhorar continuamente.`;
-      overlay.classList.add("show");
-    }
-
-    document.getElementById("startBtn").addEventListener("click", startGame);
-    document.getElementById("resetBtn").addEventListener("click", startGame);
-    document.getElementById("playAgainBtn").addEventListener("click", startGame);
-    rollBtn.addEventListener("click", rollDie);
-
-    createBoard();
-    updateTurn();
-    updatePlayers();
-  </script>
+<header>
+<div style="font-size:32px">🏥🎲</div>
+<h1>Trilha da Saúde</h1>
+<p>Qualidade no atendimento, biossegurança e segurança do paciente.</p>
+</header>
+
+<main>
+<div class="painel">
+ <div class="jogador ativo" id="painelVoce"><span class="avatar">🙋🏻‍♀️</span><div><b>Você</b><br><small id="posVoce">Início</small></div><span class="pontos" id="pontosVoce">0 pts</span></div>
+ <div class="jogador" id="painelRobo"><span class="avatar">🤖</span><div><b>Robô</b><br><small id="posRobo">Início</small></div><span class="pontos" id="pontosRobo">0 pts</span></div>
+</div>
+<div class="status" id="status">🌸 Sua vez! Role o dado.</div>
+
+<div class="tabuleiro-box">
+<div class="legenda"><span>🩷 Você</span><span>💜 Robô</span><span>❓ Pergunta</span><span>⭐ Bônus</span><span>⚠️ Desafio</span></div>
+<div id="tabuleiro">
+<svg id="trilha" viewBox="0 0 600 760" preserveAspectRatio="none">
+<path id="borda" fill="none" stroke="#554258" stroke-width="48" stroke-linecap="round" stroke-linejoin="round"/>
+<path id="interior" fill="none" stroke="#f7d9e9" stroke-width="43" stroke-linecap="round" stroke-linejoin="round"/>
+<path id="pontilhado" fill="none" stroke="#e5b9d5" stroke-width="2" stroke-dasharray="5 7"/>
+</svg>
+<div id="casas"></div>
+</div>
+<div class="controles"><div class="dado"><div style="text-align:center"><div id="faceDado">🎲</div><small>DADO</small></div></div><button class="principal" id="jogar">🎲 Jogar o dado</button></div>
+<div id="mensagem">Chegue à casa 30 para vencer!</div>
+</div>
+<div class="regras"><b>📋 Como jogar</b><br>Role o dado e avance. Responda às perguntas para ganhar pontos. As casas especiais podem ajudar ou atrapalhar. O robô joga automaticamente na vez dele!</div>
+<div class="centro"><button class="secundario" id="reiniciar">↻ Reiniciar partida</button></div>
+</main>
+
+<div class="modal" id="modal">
+<div class="conteudo">
+<div class="topo"><div class="icone" id="icone">🩺</div><span class="etiqueta" id="tema">DESAFIO DA SAÚDE</span><h2 id="titulo">Sua pergunta!</h2></div>
+<div id="pergunta"></div><div id="respostas"></div><div id="resultado"></div>
+<button class="principal" id="continuar">Continuar ➜</button>
+</div>
+</div>
+
+<div class="modal" id="fim"><div class="conteudo">
+<div class="topo" style="font-size:45px">🏆</div><h2 id="fimTitulo">Fim de jogo!</h2><p id="fimTexto" style="line-height:1.6;text-align:center"></p>
+<button class="principal" id="jogarNovamente">Jogar novamente 🎲</button>
+</div></div>
+
+<script>
+const perguntas=[
+["🪪","Segurança do paciente","Antes de encaminhar alguém para uma consulta, o que fazer?",["Confirmar a identidade com os dados necessários","Confiar apenas no rosto","Chamar quem tiver nome parecido"],0,"Confirmar a identificação ajuda a evitar trocas de pacientes."],
+["🧼","Biossegurança","Qual atitude ajuda a prevenir a transmissão de microrganismos?",["Usar materiais sem higienizar","Higienizar as mãos nos momentos indicados","Usar luvas no lugar da higiene das mãos"],1,"A higiene das mãos é essencial. Luvas não substituem essa prática."],
+["🔒","Sigilo e LGPD","Um conhecido pergunta sobre o tratamento de um paciente. O que fazer?",["Contar porque é conhecido","Mostrar o cadastro","Preservar o sigilo das informações"],2,"Informações de saúde devem ser protegidas e divulgadas apenas conforme as regras de acesso."],
+["💗","Atendimento humanizado","Uma pessoa está nervosa com a demora. Como agir?",["Ouvir, explicar e orientar com respeito","Mandar parar de reclamar","Ignorar a pessoa"],0,"Escuta e informação clara ajudam a tornar o atendimento mais humano."],
+["📈","Melhoria contínua","Para que serve a melhoria contínua?",["Manter todas as falhas","Identificar problemas e melhorar processos","Evitar sugestões"],1,"A melhoria contínua identifica falhas e ajuda a testar soluções."],
+["🗣️","Comunicação","Você não entendeu uma orientação. O que fazer?",["Inventar uma resposta","Passar qualquer informação","Confirmar com o profissional responsável"],2,"Informações devem ser corretas. Em caso de dúvida, confirme."],
+["⭐","Qualidade","Qual é um exemplo de atendimento com qualidade?",["Orientar com clareza e respeito","Atender sem ouvir","Deixar as pessoas sem informação"],0,"Qualidade envolve segurança, organização e respeito."],
+["🚨","Segurança","Uma pessoa relata sintomas que parecem urgentes. O que fazer?",["Mandar esperar sem avisar","Acionar a equipe responsável pelo protocolo de urgência","Tentar diagnosticar"],1,"Comunique a equipe responsável imediatamente e siga o protocolo do serviço."],
+["🗂️","Organização","Por que conferir os dados do cadastro?",["Para deixar bonito","Para eliminar o sigilo","Para evitar erros de identificação"],2,"Dados corretos ajudam a garantir um atendimento mais seguro."],
+["🤝","Trabalho em equipe","Você percebe uma falha no atendimento. O que fazer?",["Comunicar e ajudar a buscar uma solução","Esconder o ocorrido","Culpar alguém sem verificar"],0,"Comunicar falhas permite corrigir problemas e prevenir repetições."],
+["📊","Indicadores","Para que servem os indicadores de qualidade?",["Para substituir todo diálogo","Para acompanhar resultados e encontrar melhorias","Para criar formulários sem objetivo"],1,"Indicadores ajudam a acompanhar o tempo de espera, reclamações e outros resultados."],
+["⚖️","Ética profissional","Pedem uma informação que você não pode fornecer. O que fazer?",["Inventar uma resposta","Contar dados de outra pessoa","Explicar e encaminhar ao responsável"],2,"Respeite os limites da função e encaminhe a dúvida a alguém autorizado."],
+["✅","Prevenção de erros","Qual atitude ajuda a evitar erros?",["Seguir os procedimentos e conferir dados","Pular etapas com fila","Deixar tudo para depois"],0,"Seguir os procedimentos reduz o risco de falhas."],
+["🌷","Experiência do paciente","Como melhorar a experiência do paciente?",["Usar palavras difíceis","Dar orientações claras e tratar com respeito","Evitar perguntas"],1,"Orientações compreensíveis e respeito tornam o atendimento mais acolhedor."],
+["🔄","PDCA","O que significa o ciclo PDCA?",["Organizar só os horários","Substituir a segurança","Planejar, fazer, verificar e agir para melhorar"],2,"PDCA é um ciclo usado para planejar, executar, verificar e melhorar processos."]
+];
+
+const especiais={5:"pergunta",9:"bonus",13:"pergunta",17:"desafio",21:"pergunta",25:"bonus",28:"pergunta"};
+const cores=["#7561b3","#50b9df","#4caf83","#ffd44e","#ef6878","#e84b9b","#a65391","#ff9e55","#f1a2b4","#45489d"];
+// Coordenadas espaçadas ao longo de uma trilha sinuosa, sem casas amontoadas.
+const pontos=[
+[500,700],[445,710],[390,705],[335,690],[280,670],[225,650],
+[170,625],[130,585],[105,535],[105,485],[125,435],[165,400],
+[215,385],[270,385],[325,395],[380,410],[430,405],[470,375],
+[485,330],[475,285],[445,250],[400,230],[350,220],[300,215],
+[250,205],[205,185],[180,150],[200,115],[250,85],[320,65]
+];
+const N=30;
+let pos={voce:0,robo:0},pts={voce:0,robo:0},vez="voce",busy=false,fimJogo=false,respondida=false,perguntaAtual=null,usadas=[];
+const $=id=>document.getElementById(id);
+const casas=$("casas"),modal=$("modal");
+
+function criar(){
+ const d=pontos.map((p,i)=>(i?"L":"M")+p[0]+" "+p[1]).join(" ");
+ ["borda","interior","pontilhado"].forEach(id=>$(id).setAttribute("d",d));
+ pontos.forEach((p,i)=>{
+  let n=i+1,e=especiais[n],el=document.createElement("div");
+  el.id="casa"+n;el.className="casa";
+  el.style.left=(p[0]/600*100)+"%";el.style.top=(p[1]/760*100)+"%";
+  el.style.background=e==="pergunta"?"#ff9d55":e==="bonus"?"#ffd943":e==="desafio"?"#ed6978":cores[i%cores.length];
+  if(e)el.classList.add("especial");
+  if(n===1){el.classList.add("inicio");el.innerHTML="INÍCIO"}
+  else if(n===N){el.classList.add("chegada");el.innerHTML="🏁<br>CHEGADA"}
+  else el.innerHTML=`<span>${n}</span>${e?`<small style="font-size:9px">${e==="pergunta"?"❓":e==="bonus"?"⭐":"⚠️"}</small>`:""}`;
+  el.innerHTML+=`<span class="token voce" id="tv${n}">🙋</span><span class="token robo" id="tr${n}">🤖</span>`;
+  casas.appendChild(el);
+ });
+ atualizar();
+}
+function atualizar(){
+ for(let n=1;n<=N;n++){
+  $("casa"+n).classList.remove("atual-voce","atual-robo");
+  $("tv"+n).classList.remove("visivel");$("tr"+n).classList.remove("visivel");
+ }
+ ["voce","robo"].forEach(j=>{
+  let n=pos[j]+1;
+  $("casa"+n).classList.add(j==="voce"?"atual-voce":"atual-robo");
+  $((j==="voce"?"tv":"tr")+n).classList.add("visivel");
+ });
+ $("posVoce").textContent="Casa "+(pos.voce+1);
+ $("posRobo").textContent="Casa "+(pos.robo+1);
+ $("pontosVoce").textContent=pts.voce+" pts";
+ $("pontosRobo").textContent=pts.robo+" pts";
+ $("painelVoce").classList.toggle("ativo",vez==="voce");
+ $("painelRobo").classList.toggle("ativo",vez==="robo");
+}
+function dado(){let n=1+Math.floor(Math.random()*6);$("faceDado").textContent=["⚀","⚁","⚂","⚃","⚄","⚅"][n-1];return n}
+function turno(){
+ if(fimJogo)return;
+ vez=vez==="voce"?"robo":"voce";busy=false;atualizar();
+ if(vez==="voce"){$("status").textContent="🌸 Sua vez! Role o dado.";$("jogar").disabled=false;$("jogar").textContent="🎲 Jogar o dado"}
+ else{$("status").textContent="🤖 Vez do robô...";$("jogar").disabled=true;$("jogar").textContent="🤖 Vez do robô";setTimeout(jogadaRobo,900)}
+}
+function mover(j,n){
+ pos[j]=Math.min(N-1,pos[j]+n);atualizar();
+ if(pos[j]===N-1){encerrar(j);return}
+ const casa=pos[j]+1,e=especiais[casa];
+ if(e==="pergunta"){ $("status").textContent="❓ Hora de responder!";setTimeout(()=>abrir(j),350);return}
+ if(e==="bonus"){pos[j]=Math.min(N-1,pos[j]+2);pts[j]+=5;$("mensagem").textContent="⭐ Bônus! Avançou 2 casas e ganhou 5 pontos.";atualizar()}
+ else if(e==="desafio"){pos[j]=Math.max(0,pos[j]-1);$("mensagem").textContent="⚠️ Desafio! Volte uma casa.";atualizar()}
+ else $("mensagem").textContent=`${j==="voce"?"Você":"O robô"} avançou para a casa ${pos[j]+1}.`;
+ if(pos[j]===N-1){encerrar(j);return}
+ setTimeout(turno,j==="robo"?800:500);
+}
+function jogada(j){
+ if(busy||fimJogo)return;busy=true;$("jogar").disabled=true;
+ const n=dado();$("status").textContent=`${j==="voce"?"Você":"O robô"} tirou ${n}!`;
+ setTimeout(()=>mover(j,n),500);
+}
+function jogadaRobo(){if(!fimJogo&&vez==="robo")jogada("robo")}
+function abrir(j){
+ if(!usadas.length)usadas=perguntas.map((_,i)=>i);
+ const k=Math.floor(Math.random()*usadas.length);
+ perguntaAtual=perguntas[usadas.splice(k,1)[0]];respondida=false;
+ $("icone").textContent=perguntaAtual[0];$("tema").textContent=perguntaAtual[1].toUpperCase();
+ $("titulo").textContent=j==="voce"?"Sua pergunta!":"Desafio do robô";
+ $("pergunta").textContent=perguntaAtual[2];$("respostas").innerHTML="";
+ $("resultado").className="";$("resultado").textContent="";$("continuar").classList.remove("visivel");
+ perguntaAtual[3].forEach((texto,i)=>{
+  let b=document.createElement("button");b.className="resposta";b.textContent=String.fromCharCode(65+i)+". "+texto;
+  b.onclick=()=>responder(i,j);$("respostas").appendChild(b);
+ });
+ modal.classList.add("aberto");
+ if(j==="robo"){
+  document.querySelectorAll(".resposta").forEach(b=>b.disabled=true);
+  setTimeout(()=>{if(!respondida){let a=Math.random()<.78?perguntaAtual[4]:[0,1,2].filter(i=>i!==perguntaAtual[4])[Math.floor(Math.random()*2)];responder(a,"robo")}},1000);
+ }
+}
+function responder(i,j){
+ if(respondida)return;respondida=true;
+ const certo=i===perguntaAtual[4];
+ document.querySelectorAll(".resposta").forEach((b,k)=>{b.disabled=true;if(k===perguntaAtual[4])b.classList.add("correta");if(k===i&&!certo)b.classList.add("errada")});
+ $("resultado").className="visivel "+(certo?"bom":"ruim");
+ $("resultado").innerHTML=(certo?"✅ Resposta correta! +10 pontos.<br>":"💡 Não foi dessa vez.<br>")+perguntaAtual[5];
+ if(certo)pts[j]+=10;atualizar();
+ if(j==="voce"){$("continuar").classList.add("visivel")}
+ else setTimeout(fecharPergunta,1800);
+}
+function fecharPergunta(){modal.classList.remove("aberto");if(pos[vez]>=N-1)encerrar(vez);else turno()}
+$("continuar").onclick=()=>{if(respondida)fecharPergunta()};
+function encerrar(j){
+ fimJogo=true;busy=true;$("jogar").disabled=true;modal.classList.remove("aberto");
+ $("fimTitulo").textContent=j==="voce"?"Você venceu! 🎉":"O robô venceu! 🤖";
+ $("fimTexto").textContent=`Pontuação final: você ${pts.voce} pontos e robô ${pts.robo} pontos. Continue praticando a qualidade e a segurança no atendimento!`;
+ $("fim").classList.add("aberto");$("status").textContent="🏁 Fim de jogo!";
+}
+function reiniciar(){
+ pos={voce:0,robo:0};pts={voce:0,robo:0};vez="voce";busy=false;fimJogo=false;respondida=false;usadas=[];
+ modal.classList.remove("aberto");$("fim").classList.remove("aberto");$("faceDado").textContent="🎲";
+ $("jogar").disabled=false;$("jogar").textContent="🎲 Jogar o dado";
+ $("status").textContent="🌸 Sua vez! Role o dado.";$("mensagem").textContent="Chegue à casa 30 para vencer!";
+ atualizar();
+}
+$("jogar").onclick=()=>{if(vez==="voce")jogada("voce")};
+$("reiniciar").onclick=reiniciar;$("jogarNovamente").onclick=reiniciar;
+criar();
+</script>
 </body>
 </html>
